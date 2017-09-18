@@ -107,7 +107,6 @@ openshift_hosted_registry_storage_volume_size=15Gi
 
 # Enable metrics
 openshift_hosted_metrics_deploy=true
-openshift_metrics_cassandra_storage_type=??
 openshift_hosted_metrics_public_url=https://metrics.${ROUTEREXTIP}.nip.io/hawkular/metrics
 openshift_hosted_metrics_storage_kind=nfs
 openshift_hosted_metrics_storage_access_modes=['ReadWriteOnce']
