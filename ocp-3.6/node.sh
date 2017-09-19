@@ -29,6 +29,7 @@ EOF
 
 docker-storage-setup
 systemctl enable docker
+systemctl start docker
 
 yum -y install nfs-utils rpcbind
 systemctl enable rpcbind

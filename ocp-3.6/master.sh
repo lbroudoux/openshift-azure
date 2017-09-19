@@ -59,7 +59,10 @@ deployment_type=openshift-enterprise
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 
 openshift_master_default_subdomain=${ROUTEREXTIP}.nip.io
-openshift_use_dnsmasq=False
+#openshift_use_dnsmasq=true
+
+# Add this to allow installation on constrained resources
+openshift_disable_check=disk_availability,memory_availability
 
 # Install the openshift examples
 openshift_install_examples=true
@@ -80,6 +83,9 @@ openshift_master_htpasswd_users={'admin': '\$apr1\$bdqbl2eo\$Na6mZ6SG7Vfo3YPyp1v
 osm_use_cockpit=true
 osm_cockpit_plugins=['cockpit-kubernetes']
 
+# multi-tenant setting
+os_sdn_network_plugin_name=redhat/openshift-ovs-multitenant
+
 # default project node selector
 osm_default_node_selector='region=primary'
 
@@ -87,6 +93,7 @@ openshift_router_selector='region=infra'
 openshift_registry_selector='region=infra'
 
 # Confifgure router
+openshift_hosted_router_selector='region=infra'
 # Force to 1 otherwise Ansible compute 2 replicas cause master and infranode are region=infra
 # but Ansible does not take into account that master is not schedulable. So it fails...
 openshift_hosted_router_replicas=1
@@ -149,6 +156,11 @@ export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 oc annotate namespace default openshift.io/node-selector='region=infra' --overwrite
 oadm policy add-cluster-role-to-user cluster-admin admin
+EOF
+
+cat <<EOF > /home/${USERNAME}/openshift-uninstall.sh
+export ANSIBLE_HOST_KEY_CHECKING=False
+ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/adhoc/uninstall.yml
 EOF
 
 chmod 755 /home/${USERNAME}/openshift-install.sh

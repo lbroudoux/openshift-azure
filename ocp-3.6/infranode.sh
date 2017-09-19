@@ -29,7 +29,7 @@ EOF
 
 docker-storage-setup
 systemctl enable docker
-
+systemctl start docker
 
 # Install a NFS server on infranode
 yum -y install nfs-utils rpcbind
