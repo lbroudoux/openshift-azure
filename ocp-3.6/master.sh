@@ -121,6 +121,10 @@ openshift_hosted_metrics_storage_host=infranode
 openshift_hosted_metrics_storage_nfs_directory=/exports
 openshift_hosted_metrics_storage_volume_name=metrics
 openshift_hosted_metrics_storage_volume_size=5Gi
+openshift_hosted_metrics_cassandra_replicas="1"
+openshift_hosted_metrics_cassandra_nodeselector={"region":"infra"}
+openshift_hosted_metrics_hawkular_nodeselector={"region": "infra"}
+openshift_hosted_metrics_heapster_nodeselector={"region":"infra"}
 
 # Enable logging
 openshift_hosted_logging_deploy=true
@@ -142,7 +146,7 @@ openshift_hosted_logging_storage_volume_name=logging-es
 openshift_hosted_logging_storage_volume_size=10Gi
 
 [masters]
-master openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  openshift_public_hostname=${HOSTNAME}
+master openshift_node_labels="{'region': 'master', 'zone': 'default'}"  openshift_public_hostname=${HOSTNAME}
 
 [nodes]
 master
