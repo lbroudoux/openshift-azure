@@ -168,6 +168,7 @@ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/adhoc/uninstall.
 EOF
 
 chmod 755 /home/${USERNAME}/openshift-install.sh
+chmod 755 /home/${USERNAME}/openshift-uninstall.sh
 
 n=1
 while [ $n -le 4 ]
