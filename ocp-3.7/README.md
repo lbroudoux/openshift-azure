@@ -1,13 +1,13 @@
 This work is based on https://github.com/WilliamRedHat
 
-# RedHat Openshift 3.6 cluster on Azure
+# RedHat Openshift 3.7 cluster on Azure
 
-When creating the RedHat Openshift 3.6 cluster on Azure, you will need a SSH RSA key for access.
+When creating the RedHat Openshift 3.7 cluster on Azure, you will need a SSH RSA key for access.
 Do not forget to update rhn-username, pools, etc ...
 
 ## Create the cluster
 
-To have OpenShift Enterprise 3.6 running on Azure, you will have to
+To have OpenShift Enterprise 3.7 running on Azure, you will have to
 follow 2 steps.
 - First deploy the cluster with one of the following method.
 - Then use Ansible to install OpenShift Container Platform 3.6
@@ -18,10 +18,10 @@ follow 2 steps.
 
 Click on Deploy to Azure then you will be redirected to your Azure account
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Flbroudoux%2Fopenshift-azure%2Frhel%2Focp-3.6%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Flbroudoux%2Fopenshift-azure%2Frhel%2Focp-3.7%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Flbroudoux%2Fopenshift-azure%2Frhel%2Focp-3.6%2Fazuredeploy.json" target="_blank">
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Flbroudoux%2Fopenshift-azure%2Frhel%2Focp-3.7%2Fazuredeploy.json" target="_blank">
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
@@ -30,7 +30,7 @@ Wait for the installation to be ready this will consist of having one infra node
 #### From powershell CLI
 
 ```powershell
-New-AzureRmResourceGroupDeployment -Name <DeploymentName> -ResourceGroupName <RessourceGroupName> -TemplateUri https://raw.githubusercontent.com/lbroudoux/openshift-azure/rhel/ocp-3.6/azuredeploy.json
+New-AzureRmResourceGroupDeployment -Name <DeploymentName> -ResourceGroupName <RessourceGroupName> -TemplateUri https://raw.githubusercontent.com/lbroudoux/openshift-azure/rhel/ocp-3.7/azuredeploy.json
 ```
 
 #### Common parameters
