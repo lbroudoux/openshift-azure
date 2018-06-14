@@ -67,6 +67,11 @@ openshift_master_default_subdomain=${ROUTEREXTIP}.nip.io
 
 # Add this to allow installation on constrained resources
 openshift_disable_check=disk_availability,memory_availability
+openshift_enable_unsupported_configurations=True
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=1588435
+oreg_url=registry.access.redhat.com/openshift3/ose-${component}:${version}
+openshift_examples_modify_imagestreams=true
 
 # Install the openshift examples
 openshift_install_examples=true
@@ -161,7 +166,7 @@ openshift_logging_storage_host=infranode
 openshift_logging_storage_nfs_directory=/exports
 openshift_logging_storage_volume_name=logging-es
 openshift_logging_storage_volume_size=10Gi
-openshift_logging_fluentd_nodeselector={"region":"primary"}
+openshift_logging_fluentd_nodeselector={"zone":"default"}
 
 [masters]
 master.${SUBNET_REF} openshift_hostname=master.${SUBNET_REF} openshift_node_labels="{'region': 'master', 'zone': 'default', 'openshift-infra': 'apiserver'}"  openshift_public_hostname=${HOSTNAME}
@@ -174,7 +179,7 @@ master.${SUBNET_REF}
 
 [nodes]
 master.${SUBNET_REF} openshift_hostname=master.${SUBNET_REF}
-infranode.${SUBNET_REF} oopenshift_hostname=infranode.${SUBNET_REF} penshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+infranode.${SUBNET_REF} openshift_hostname=infranode.${SUBNET_REF} openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 node[01:${NODECOUNT}].${SUBNET_REF} openshift_hostname=node[01:${NODECOUNT}].${SUBNET_REF} openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 
 EOF
@@ -191,8 +196,8 @@ EOF
 
 cat <<EOF > /home/${USERNAME}/openshift-install.sh
 export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
-ansible-playbook /home/${USERNAME}/fix-resolv.conf.yml
+ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
+ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/deploy-cluster.yml
 oc annotate namespace default openshift.io/node-selector='region=infra' --overwrite
 oadm policy add-cluster-role-to-user cluster-admin admin
 EOF
@@ -206,7 +211,7 @@ chmod 755 /home/${USERNAME}/openshift-install.sh
 chmod 755 /home/${USERNAME}/openshift-uninstall.sh
 
 n=1
-while [ $n -le 8 ]
+while [ $n -le 9 ]
 do
 cat <<EOF > /home/${USERNAME}/pv000$n.json
 {
@@ -231,15 +236,15 @@ EOF
 (( n++ ))
 done
 
-n=9
+n=10
 while [ $n -le 19 ]
 do
-cat <<EOF > /home/${USERNAME}/pv000$n.json
+cat <<EOF > /home/${USERNAME}/pv00$n.json
 {
   "apiVersion": "v1",
   "kind": "PersistentVolume",
   "metadata": {
-    "name": "pv000$n"
+    "name": "pv00$n"
   },
   "spec": {
     "capacity": {
@@ -247,7 +252,7 @@ cat <<EOF > /home/${USERNAME}/pv000$n.json
     },
     "accessModes": [ "ReadWriteOnce", "ReadWriteMany" ],
     "nfs": {
-        "path": "/exports/pv000$n",
+        "path": "/exports/pv00$n",
         "server": "infranode"
     },
     "persistentVolumeReclaimPolicy": "Recycle"
@@ -313,7 +318,7 @@ cat <<EOF > /home/${USERNAME}/create-pvs.sh
 n=1
 while [ \$n -le 9 ]
 do
-  oc create -f pv000\$n.json
+  oc create -f pv00\$n.json
   (( n++ ))
 done
 n=10
